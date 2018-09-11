@@ -1,39 +1,59 @@
-def GaussElim(A):
+def GaussElim(file,fileToWr):
+    with open(file, encoding='utf-8') as fil:
+        A= [[float(digit) for digit in line.split()] for line in fil]
     n=len(A)
     p =0
-    for i in range(0, n-1):  # search for maximum in this column
+    for i in range(0, n-1): # search for maximum in this column
+        firROw = i
         maxE1 = abs(A[i][i])
         maxRow = i
         for k in range(i + 1, n):
             if abs(A[k][i]) > maxE1:
                 maxE1 = abs(A[k][i])
                 maxRow = k
-                # swap maximum row with current row (column by column)
-        A[i],A[maxRow]=A[maxRow],A[i]
-
-        if(A[i][i] == 0):
-            break
+        # swap maximum row with current row (column by column)
+        if(firROw!=maxRow):
+            A[i],A[maxRow]=A[maxRow],A[i]
+            p+=1
 
         for k in range(i+1, n):
             c = -A[k][i] / A[i][i]
             for j in range(i, n+1):
                A[k][j] += c * A[i][j]
-                    # solve equation Ax+b for an upper triangular matrix A
+     #checking for zero in matrix
+    for i in range(n):
+        if(A[i][i] ==0):
+            return False
+
+# solve equation Ax+b for an upper triangular matrix A
+    determ = (-1)**(p)
+    for i in range(n):
+        determ = determ*A[i][i]
+
     x = []
+    x.append(determ)
 
     for i in range(n - 1, -1, -1):
-
-        x.insert(0, A[i][n] / A[i][i])
+        y = A[i][n] / A[i][i]
+        x.insert(0,y)
 
         for k in range(i - 1, -1, -1):
             A[k][n] -= A[k][i] * x[0]
 
+    with open(fileToWr, 'w') as f:
+        #for item in x:
+        f.write("%s\n" % x)
     return x
 
-A = [[1., 2, 1, 1],
 
-    [1, 3 , 1, 1],
+n =  GaussElim('1matrix.txt','b1.txt')
+if (n !=0):
+    for elem in range(len(n)-1):
+        print('x'+ str(elem) + ' =' + "%.9f" % n[elem])
+    print( "determinant = "+str("%.9f" % n[-1]))
+else:
+    print("has no solution")
 
-    [0, 1, 1, 2]]
 
-print(GaussElim(A))
+
+

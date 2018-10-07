@@ -1,0 +1,41 @@
+import numpy as np
+
+ITERATION_LIMIT = 1000
+
+# initialize the matrix
+A= np.loadtxt('matr31.txt', usecols=range(4))
+b =np.loadtxt('matr31b.txt', usecols=range(4))
+
+
+
+# prints the system
+print("System:")
+for i in range(A.shape[0]):
+    row = ["{}*x{}".format(A[i, j], j + 1) for j in range(A.shape[1])]
+    print(" + ".join(row), "=", b[i])
+print()
+
+
+x =[b[i]/A[i][i] for i in range(len(A))]
+for it_count in range(ITERATION_LIMIT):
+    print("Current solution:", x)
+    x_new = np.zeros_like(x)
+
+    for i in range(len(A)):
+        s1 = sum(A[i,:i]*x[:i])
+        s2 = sum(A[i,i+1:]*x[i+1:])
+        x_new[i] = (b[i] - s1 - s2) / A[i, i]
+    if(it_count == ITERATION_LIMIT-1):
+        print("yooooooo")
+
+    if np.allclose(x, x_new, atol=0.0001):
+        break
+
+    x = x_new
+
+print("Solution:")
+for i in range(len(x)):
+    print("%.9f" % x[i])
+error = np.dot(A, x) - b
+print("Error:")
+print(error)

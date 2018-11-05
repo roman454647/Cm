@@ -1,0 +1,38 @@
+mport matplotlib.pyplot as plt
+import random
+
+
+def func(x):
+    return (x**3)+2*x-4
+
+def build_plot(a,b):
+    x = list(range(a,b))
+    func = [i**3+2*i-4 for i in x ]
+    plt.plot(x,func)
+    plt.ylabel("labka5")
+    plt.show()
+
+def half_divide(a,b,e):
+    build_plot(a,b)
+    x0 = (a+b)/2
+    if(func(x0) == 0):
+        print("solution for function is  x = ",x0)
+    elif(func(a)*func(b)>=0 or (b-a)<e):
+        print('this range have severaal root')
+    else:
+        k =0
+        while(True):
+          x0 = (b+a)/2
+          #print("number of iteration  " ,k)
+          print(a,b)
+          if(func(x0)==0 or abs(b-a)<e):
+            print("==x==")
+            return round(x0,3)
+          elif(func(x0)*func(a)<0):
+            b =x0
+          elif(func(x0)*func(a)>=0):
+              a=x0
+          k+=1
+
+print(half_divide(0,10,0.0001))
+

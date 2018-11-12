@@ -130,8 +130,3 @@ print("NUMpy =  ",np.linalg.eig(A))
 
 
 
-
-   
-  
-
-

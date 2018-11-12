@@ -1,5 +1,4 @@
 import numpy as np
-import math
 from numpy import linalg
 import functools
 def GaussElim(A):
@@ -78,41 +77,16 @@ def matrix_substract(X,Y):
     result = [[abs(a - b) for a, b in zip(xrow, yrow)]
               for xrow, yrow in zip(X, Y)]
     return result
-
 def add_column(A,x):
     for i in range(len(A)):
         A[i].insert(len(A[i]),x[i])
     return A
 
-
-
-def pm_algo(A):
-    # Ideally choose a random vector
-    # To decrease the chance that our vector
-    # Is orthogonal to the eigenvector
-    b_k = np.random.rand(A.shape[1])
-
-    for _ in range(3):
-        # calculate the matrix-by-vector product Ab
-        b_k1 = np.dot(A, b_k)
-
-        # calculate the norm
-        b_k1_norm = np.linalg.norm(b_k1)
-
-        # re normalize the vector
-        b_k = b_k1 / b_k1_norm
-
-    return b_k
-
-
-
-
 def RQI(A):
     n = len(A)
     E = np.zeros((n, n), int)
     np.fill_diagonal(E, 1)
-    #x = np.full((n), 1 / (n ** (1 / 2)))
-    x =pm_algo(A)
+    x = np.full((n), 1 / (n ** (1 / 2)))
     k =0
     while(k<100):
         k = k+1
@@ -138,20 +112,26 @@ def RQI(A):
         #print("y=  ",y)
         norm = euclid_norm(y)
         print("norm= ",norm)
-        x =np.divide(y,norm)
+        x =divide(y,norm)
         #x = divide(y,norm)
         if(norm>1000 or k ==99):
-            print("x  =  ",x)
+            print("x  =  ",-x)
             print("p = ",p)
             print("number of iteration = ",k)
             return
 
 
 
-A= np.loadtxt('matr2.txt', usecols=range(4))
+A= np.loadtxt('matr41.txt', usecols=range(4))
 '''with open("matr1", encoding='utf-8') as fil:
     A= [[float(digit) for digit in line.split()] for line in fil]'''
 RQI(A)
 print("NUMpy =  ",np.linalg.eig(A))
+
+
+
+
+   
+  
 
 

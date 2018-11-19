@@ -1,0 +1,105 @@
+import numpy as np
+from numpy import cos, sin, pi, exp
+import matplotlib.pyplot as plt
+import math
+def GaussElim(A):
+    n=len(A)
+    p =0
+    for i in range(0, n-1): # search for maximum in this column
+        firROw = i
+        maxE1 = abs(A[i][i])
+        maxRow = i
+        for k in range(i + 1, n):
+            if abs(A[k][i]) > maxE1:
+                maxE1 = abs(A[k][i])
+                maxRow = k
+        # swap maximum row with current row (column by column)
+        if(firROw!=maxRow):
+            A[i],A[maxRow]=A[maxRow],A[i]
+            p+=1
+
+        for k in range(i+1, n):
+            c = -A[k][i] / A[i][i]
+            for j in range(i, n+1):
+               A[k][j] += c * A[i][j]
+     #checking for zero in matrix
+    for i in range(n):
+        if(A[i][i] ==0):
+            return False
+
+    # solve equation Ax+b for an upper triangular matrix A
+    x = []
+
+
+    for i in range(n - 1, -1, -1):
+        y = A[i][n] / A[i][i]
+        x.insert(0,y)
+
+        for k in range(i - 1, -1, -1):
+            A[k][n] -= A[k][i] * x[0]
+    return x
+
+def solve(y,yy):
+    y1 = np.copy(y)
+    yy1 = np.copy(yy)
+    res = np.linalg.solve(yy1,y1)
+    return res
+
+def F(x):
+    f=[]
+    f.append(-math.exp(x[0]*x[1])+x[0]**2-x[1]+1.5)
+    f.append(-(x[0]+0.5)**2 -x[1]**2 +1)
+    return f
+
+def Fp(x):
+    return math.exp(x[0]*x[1])-x[0]**2+x[1]-1.5
+
+def Fp1(x):
+    return (x[0]+0.5)**2 +x[1]**2 -1
+
+def J(x):
+    return [[x[1]*math.exp(x[0]*x[1])-2*x[0],x[0]*math.exp(x[0]*x[1])-2*x[0]],
+            [2*x[0]+1,2*x[1]]]
+
+def norm(x):
+    norm =0
+    for i in range(len(x)):
+        norm = norm+(x[i]**2)
+    return norm**(1/2)
+
+def Newton_system(F, J, x, eps):
+    F_value = F(x)
+
+    iteration_counter = 0
+    while(1):
+
+        F_value =F(x)
+        delta =solve(F_value,J(x))
+        if(norm(delta)<eps):
+            return x,iteration_counter
+        x = x + delta
+        iteration_counter += 1
+
+def build_plot():
+    from numpy import arange, meshgrid, sqrt
+    fig, ax = plt.subplots()
+
+    delta = 0.025
+    x, y = meshgrid(
+        arange(-10, 10, delta),
+        arange(-10, 10, delta)
+    )
+
+    plt.contour( x, y,np.exp(x*y)-x**2+y-1.5,[0])
+    plt.contour(x,y,(x+0.5)**2 +y**2 -1)
+    #plt.countour(x,(1-(x+0.5)**2)**(1/2))
+    # = np.arange(-10, 10.0, 0.1)
+    plt.plot(x,(1-(x+0.5)**2)**(1/2))
+    plt.show()
+
+#build_plot()
+x,iteration_counter = Newton_system(F,J,[1.0,1.0],0.001)
+
+print(x,iteration_counter)
+print(Fp(x))
+print(Fp1(x))
